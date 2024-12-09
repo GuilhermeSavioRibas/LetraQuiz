@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Pergunta</h1>
+    <form method="POST">
+        <label for="tema">Tema:</label>
+        <input type="text" id="tema" name="tema" value="{{ question.tema }}" readonly>
+        <input type="hidden" name="tema" value="{{ question.tema }}">
+        <label for="pergunta">Pergunta:</label>
+        <input type="text" id="pergunta" name="pergunta" value="{{ question.pergunta }}" required><br>
+        <label for="resposta_correta">Resposta Correta:</label>
+        <input type="text" id="resposta_correta" name="resposta_correta" value="{{ question.resposta_correta }}" required><br>
+        <label for="resposta_errada1">Resposta Errada 1:</label>
+        <input type="text" id="resposta_errada1" name="resposta_errada1" value="{{ question.resposta_errada_1 }}" required><br>
+        <label for="resposta_errada2">Resposta Errada 2:</label>
+        <input type="text" id="resposta_errada2" name="resposta_errada2" value="{{ question.resposta_errada_2 }}" required><br>
+        <label for="resposta_errada3">Resposta Errada 3:</label>
+        <input type="text" id="resposta_errada3" name="resposta_errada3" value="{{ question.resposta_errada_3 }}" required><br>
+        <label for="material_consulta">Material de Consulta:</label>
+        <input type="text" id="material_consulta" name="material_consulta" value="{{ question.material_consulta }}"><br>
+        <button type="submit">Salvar Alterações</button>
+        <button type="button" data-question-id="{{ question.id|tojson }}" onclick="deleteQuestion(this)">Excluir Pergunta</button>
+    </form>
+    <script>
+        function deleteQuestion(buttonElement) {
+            var questionId = buttonElement.getAttribute('data-question-id');
+            if (questionId === null || questionId === '') {
+                alert("Invalid question ID.");
+                return;
+            }
+            if (confirm("Tem certeza de que deseja excluir esta pergunta?")) {
+                location.href = '/admin/delete_question/' + questionId;
+            }
+        }
+    </script>
+</div>
+{% endblock %}

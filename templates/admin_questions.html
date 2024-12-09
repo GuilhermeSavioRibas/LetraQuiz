@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gerenciar Perguntas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    {% extends "base.html" %}
+
+    {% block content %}
+    <div class="container">
+        <h1>Gerenciar Perguntas</h1>
+        <button onclick="location.href='/admin/add_theme_questions'">Adicionar Novo Tema e Perguntas</button>
+        <select id="theme-filter">
+            <option value="">Todos os Temas</option>
+            {% for theme in themes %}
+                <option value="{{ theme }}">{{ theme }}</option>
+            {% endfor %}
+        </select>
+        <p>Selecione uma pergunta para edita-la ou excluí-la.</p>
+        <div class="table-container">
+        <table id="questions-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tema</th>
+                    <th>Pergunta</th>
+                    <th>Resposta Correta</th>
+                    <th>Resposta Errada 1</th>
+                    <th>Resposta Errada 2</th>
+                    <th>Resposta Errada 3</th>
+                    <th>Material de Consulta</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                <tr onclick="location.href='/admin/edit_question/{{ question.id }}'" data-tema="{{ question.tema }}">
+                    <td>{{ question.id }}</td>
+                    <td>{{ question.tema }}</td>
+                    <td>{{ question.pergunta }}</td>
+                    <td>{{ question.resposta_correta }}</td>
+                    <td>{{ question.resposta_errada_1 }}</td>
+                    <td>{{ question.resposta_errada_2 }}</td>
+                    <td>{{ question.resposta_errada_3 }}</td>
+                    <td>{{ question.material_consulta }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <script>
+            // Filter table by theme
+            document.getElementById('theme-filter').addEventListener('change', function() {
+                var selectedTheme = this.value.trim().toLowerCase();
+                var rows = document.querySelectorAll('#questions-table tbody tr');
+                rows.forEach(function(row) {
+                    if (row.hasAttribute('data-tema')) {
+                        var tema = row.getAttribute('data-tema').trim().toLowerCase();
+                        if (selectedTheme === '' || tema === selectedTheme) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        </script>
+    </div>
+    {% endblock %}
+</body>
+</html>

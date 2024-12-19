@@ -293,6 +293,47 @@ select {
     background-color: #FFFFFF;
 }
 
+.edit-btn {
+    background-color: #ffc107;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* ...existing code... */
+
+.edit-btn, .delete-btn {
+    padding: 5px 8px;
+}
+
+/* ...existing code... */
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* ...existing code... */
+
 /* Responsive styles for smaller screens */
 @media (max-width: 768px) {
     .navbar {

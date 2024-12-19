@@ -98,8 +98,8 @@ button:hover {
 .login-form {
     display: flex;
     align-items: center;
-    margin-left: auto; /* Pushes it to the far right */
-    flex-wrap: wrap; /* Adicionado para ajustar em telas menores */
+    margin-left: auto;
+    flex-wrap: wrap;
 }
 
 .login-form input {
@@ -173,14 +173,14 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    table-layout: fixed; /* Garante que todas as colunas tenham largura igual */
+    table-layout: fixed;
 }
 
 th, td {
     padding: 10px;
     text-align: left;
     border: 1px solid #003134;
-    word-wrap: break-word; /* Quebra de linha para conteúdo longo */
+    word-wrap: break-word;
 }
 
 th {
@@ -197,14 +197,14 @@ tr:hover {
 }
 
 .table-container {
-    overflow-x: auto; /* Adicionado para rolagem horizontal */
-    margin-bottom: 40px; /* Espaçamento entre tabelas */
+    overflow-x: auto;
+    margin-bottom: 40px;
 }
 
 .scrollable-table {
-    max-height: 400px; /* Altura máxima para a tabela de perguntas */
-    overflow-y: auto; /* Habilita rolagem vertical */
-    border: 1px solid #003134; /* Adiciona borda ao contêiner */
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #003134; 
 }
 
 input[readonly] {
@@ -223,7 +223,6 @@ select {
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
-    /*background-image: url('path_to_arrow_icon.png'); /* Custom dropdown arrow */
     background-position: right center;
     background-repeat: no-repeat;
     background-size: auto 50%;
@@ -314,11 +313,11 @@ select {
 
     .login-form {
         margin-left: 0;
-        flex-direction: column; /* Alinha os campos do formulário verticalmente */
+        flex-direction: column;
     }
 
     .login-form input {
-        width: 100%; /* Ocupa toda a largura */
+        width: 100%;
         margin-right: 0;
         margin-bottom: 10px;
     }
@@ -332,7 +331,7 @@ select {
     }
 
     .collapsible-header h1 {
-        font-size: 18px; /* Reduz o tamanho do título em telas menores */
+        font-size: 18px;
     }
 
     /* Adiciona rolagem horizontal na tabela de perguntas em telas menores */

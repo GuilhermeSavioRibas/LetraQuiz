@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LetraQuiz{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h1><a href="{{ url_for('index') }}">LetraQuiz</a></h1>
+            </div>
+            <div class="navbar-menu">
+                <ul>
+                    {% if session['user_type'] == 'admin' %}
+                        <li><a href="{{ url_for('admin_questions') }}">Controle</a></li>
+                    {% endif %}         
+                </ul>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+                {% else %}           
+                    {% if error %}
+                        <div class="error-message" style="color: red; text-align: center;">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('login') }}" class="login-form">
+                        <input type="text" id="login" name="login" placeholder="Login" required>
+                        <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                        <button type="submit">Login</button>
+                    </form>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

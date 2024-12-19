@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LetraQuiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+{% extends "base.html" %}
+
+{% block content %}
+    {% if session.get('user_id') %}
+        <h1>Letramento Digital</h1>
+        <div class="container">
+            <h2>Top 5</h2>
+            <ul id="top5-list"></ul>
+        </div>
+
+        <div class="container">
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+            <form id="startForm">
+                <label for="tema"></label>
+                <select id="tema" name="tema">
+                    <option value="">Selecione um tema</option>
+                    {% for tema in temas %}
+                        <option value="{{ tema|trim }}">{{ tema }}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <label for="usuario" style="margin-top: 20px;">Digite seu nome:</label>
+                <input type="text" id="usuario" name="usuario" required>
+                <br>
+                <button type="submit">Iniciar Quiz</button>
+            </form>
+        </div>
+    {% else %}
+        <p class="login-message">Por favor, faça login para iniciar o Quiz.</p>
+    {% endif %}
+
+    <script>
+        document.getElementById('startForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const tema = document.getElementById('tema').value;
+            const usuario = document.getElementById('usuario').value;
+
+            if (!tema) {
+                alert('Selecione um tema.');
+                return;
+            }
+
+            fetch('/start_quiz', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'tema': tema,
+                    'usuario': usuario
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.open();
+                document.write(data);
+                document.close();
+            });
+        });
+
+        function updateTop5() {
+            const tema = document.getElementById('tema').value.trim();
+            if (tema) {
+                fetch(`/get_top5?tema=${tema}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const top5List = document.getElementById('top5-list');
+                        top5List.innerHTML = '';
+                        data.forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = `${item.usuario} - ${item.score} pontos - ${item.tema}`;
+                            top5List.appendChild(li);
+                        });
+                    });
+            } else {
+                const top5List = document.getElementById('top5-list');
+                top5List.innerHTML = '';
+            }
+        }
+
+        document.getElementById('tema').addEventListener('change', updateTop5);
+    </script>
+{% endblock %}
+</body>
+</html>

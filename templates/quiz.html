@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LetraQuiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    {% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h1>Quiz - {{ tema }}</h1>
+        <h2>Jogador: {{ usuario }}</h2>
+        <h3>Pontos: <span id="score">0</span></h3>
+        <h3>Questão: <span id="question-number">0/0</span></h3>
+        <div id="question-container"></div>
+        <button id="skip-button" onclick="useSkip()">Pular Questão (<span id="pulos">3</span> restantes)</button>
+        <button id="l2-button" onclick="useL2()">Consultar Professor(a) (<span id="consultas_professor">1</span> restantes)</button>
+        <button id="card-button" onclick="useCard()">Cartas (<span id="cartas">1</span> restantes)</button>
+        <button id="article-button" onclick="useArticle()">Material de consulta (<span id="material_de_consulta">1</span> restantes)</button>
+        <button id="back-button" onclick="confirmExit()">Sair</button>
+    </div>
+
+    <script>
+        let score = 0;
+        let pulos = 3;
+        let consultas_professor = 1;
+        let cartas = 1;
+        let material_de_consulta = 1;
+        let totalPerguntas = 0;
+        let perguntaNumero = 0;
+        
+        function disableAllButtons() {
+            document.querySelectorAll('button').forEach(button => {
+                button.disabled = true;
+            });
+        }
+
+        function loadQuestion() {
+            fetch('/get_question', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: data.error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Parabéns!',
+                        text: data.success,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        disableAllButtons();
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 3000);
+                    });
+                    return;
+                }
+
+                const questionContainer = document.getElementById('question-container');
+                questionContainer.innerHTML = `
+                    <h2>${data.pergunta}</h2>
+                    ${data.opcoes.map(opcao => `<button class="option-btn" onclick="checkAnswer('${opcao}')">${opcao}</button>`).join('')}
+                `;
+
+                document.getElementById('question-number').innerText = `${data.pergunta_numero}/${data.total_perguntas}`; 
+
+                if (data.artigo === null) {
+                    document.getElementById('article-button').disabled = false;
+                    document.getElementById('material_de_consulta').innerText = '0';
+                } else {
+                    document.getElementById('article-button').disabled = material_de_consulta === 0;
+                    document.getElementById('material_de_consulta').innerText = material_de_consulta;
+                }
+
+                if (data.artigo) {
+                    sessionStorage.setItem('artigo', data.artigo);
+                } else {
+                    sessionStorage.removeItem('artigo');
+                }
+            });
+        }
+
+        function checkAnswer(resposta) {
+            fetch('/check_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'resposta': resposta
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.correct) {
+                    score++;
+                    document.getElementById('score').innerText = score;
+                    loadQuestion();
+                } else {
+                    Swal.fire({
+                        title: 'Resposta errada!',
+                        html: `Seu score: ${data.score}<br>Questão: ${data.question}<br>Resposta correta: ${data.correct_answer}`,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        location.href = '/';
+                    });
+                }
+            });
+        }
+
+
+        function useSkip() {
+            fetch('/use_skip', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    pulos--;
+                    document.getElementById('pulos').innerText = pulos;
+                    loadQuestion();
+                    if (pulos === 0) {
+                        document.getElementById('skip-button').disabled = true;
+                    }
+                } else {
+                    Swal.fire({
+                        title: 'Atenção',
+                        text: 'Você não tem mais pulos disponíveis.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+        function useL2() {
+            fetch('/use_l2', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    consultas_professor--;
+                    document.getElementById('consultas_professor').innerText = consultas_professor;
+                    Swal.fire({
+                        title: 'Consulta Professor(a)',
+                        text: 'Consulta Professor(a) realizada com sucesso!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    if (consultas_professor === 0) {
+                        document.getElementById('l2-button').disabled = true;
+                    }
+                } else {
+                    Swal.fire({
+                        title: 'Atenção',
+                        text: 'Você não tem mais consultas professor(a) disponíveis.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+        function useCard() {
+            let opcoes = [];
+            $(".option-btn").each(function() {
+                opcoes.push($(this).text());
+            });
+
+            $.ajax({
+                url: "/use_card",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ opcoes: opcoes }),
+                success: function(data) {
+                    if (data.success) {
+                        cartas--;
+                        document.getElementById('cartas').innerText = cartas;
+                        Swal.fire({
+                            title: `Respostas removidas: ${data.carta}`,
+                            imageUrl: data.carta_imagem,
+                            imageAlt: `Carta ${data.carta}`,
+                            imageWidth: 200,
+                            imageHeight: 'auto',
+                        });
+                        let optionsHtml = "";
+                        data.opcoes.forEach((option, index) => {
+                            optionsHtml += `<button class="option-btn" onclick="checkAnswer('${option}')">${option}</button>`;
+                        });
+                        $("#question-container").html(`
+                            <h2>${data.pergunta}</h2>
+                            ${optionsHtml}
+                        `);
+                        if (cartas === 0) {
+                            document.getElementById('card-button').disabled = true;
+                        }
+                    } else {
+                        Swal.fire({
+                            title: 'Atenção',
+                            text: 'Você não tem mais cartas disponíveis.',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                }
+            });
+        }
+
+        function useArticle() {
+            if (sessionStorage.getItem('artigo')) {
+                fetch('/use_article', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        material_de_consulta--;
+                        document.getElementById('material_de_consulta').innerText = material_de_consulta;
+                        Swal.fire({
+                            title: 'Material de consulta',
+                            text: `Material de consulta: ${data.artigo}`,
+                            icon: 'info',
+                            confirmButtonText: 'OK'
+                        });
+                        if (material_de_consulta === 0) {
+                            document.getElementById('article-button').disabled = true;
+                        }
+                    } else {
+                        Swal.fire({
+                            title: 'Atenção',
+                            text: 'Nenhum material de consulta disponível.',
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Atenção',
+                    text: 'Nenhum artigo disponível para esta questão.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
+        function confirmExit() {
+            Swal.fire({
+                title: 'Você tem certeza?',
+                text: "Seu progresso será perdido!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, sair',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadQuestion);
+    </script>
+    {% endblock %}
+</body>
+</html>

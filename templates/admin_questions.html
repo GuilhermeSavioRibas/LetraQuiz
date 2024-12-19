@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Gerenciar Perguntas e Usuários</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% extends "base.html" %}
+
+    {% block content %}
+    <div class="container">
+        <!-- Gerenciar Perguntas -->
+        <div class="collapsible-container">
+            <div class="collapsible-header" onclick="toggleCollapse(this)">
+                <span class="toggle-icon">▼</span> <!-- Ícone inicial para baixo -->
+                <h1>Gerenciar Perguntas</h1>
+            </div>
+            <div class="collapsible-content" style="display: none;">
+                <button onclick="location.href='/admin/add_theme_questions'" class="btn btn-primary">Adicionar Novo Tema e Perguntas</button>
+                <select id="theme-filter">
+                    <option value="">Todos os Temas</option>
+                    {% for theme in themes %}
+                        <option value="{{ theme }}">{{ theme }}</option>
+                    {% endfor %}
+                </select>
+                <p>Clique em uma pergunta para edita-la ou use os botões de ação.</p>
+                <div class="table-container">
+                    <div class="scrollable-table">
+                        <table id="questions-table" class="table table-questions">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tema</th>
+                                    <th>Pergunta</th>
+                                    <th>Resposta Correta</th>
+                                    <th>Resposta Errada 1</th>
+                                    <th>Resposta Errada 2</th>
+                                    <th>Resposta Errada 3</th>
+                                    <th>Material de Consulta</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for question in questions %}
+                                <tr data-tema="{{ question.tema }}">
+                                    <td>{{ question.id }}</td>
+                                    <td>{{ question.tema }}</td>
+                                    <td>{{ question.pergunta }}</td>
+                                    <td>{{ question.resposta_correta }}</td>
+                                    <td>{{ question.resposta_errada_1 }}</td>
+                                    <td>{{ question.resposta_errada_2 }}</td>
+                                    <td>{{ question.resposta_errada_3 }}</td>
+                                    <td>{{ question.material_consulta }}</td>
+                                    <td>
+                                        <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-warning">Editar</a>
+                                        <a href="{{ url_for('delete_question', question_id=question.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esta pergunta?')">Excluir</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gerenciar Usuários -->
+        <div class="collapsible-container">
+            <div class="collapsible-header" onclick="toggleCollapse(this)">
+                <span class="toggle-icon">▼</span> <!-- Ícone inicial para baixo -->
+                <h1>Gerenciar Usuários</h1>
+            </div>
+            <div class="collapsible-content" style="display: none;">
+                <button onclick="location.href='/admin/add_user'" class="btn btn-primary">Adicionar Novo Usuário</button>
+                <div class="table-container">
+                    <div class="scrollable-table">
+                        <table id="users-table" class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Login</th>
+                                    <th>Tipo de Usuário</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.login }}</td>
+                                    <td>{{ user.tipo_usuario }}</td>
+                                    <td>
+                                        <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-warning">Editar</a>
+                                        <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Filter table by theme
+            document.getElementById('theme-filter').addEventListener('change', function() {
+                var selectedTheme = this.value.trim().toLowerCase();
+                var rows = document.querySelectorAll('#questions-table tbody tr');
+                rows.forEach(function(row) {
+                    if (row.hasAttribute('data-tema')) {
+                        var tema = row.getAttribute('data-tema').trim().toLowerCase();
+                        if (selectedTheme === '' || tema === selectedTheme) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+
+            // Toggle collapse functionality
+            function toggleCollapse(header) {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('.toggle-icon');
+
+                // Verifica se o conteúdo está visível ou oculto
+                if (content.style.display === 'none' || content.style.display === '') {
+                    // Expande o conteúdo
+                    content.style.display = 'block';
+                    icon.textContent = '▲'; // Seta para cima (expandido)
+                } else {
+                    // Minimiza o conteúdo
+                    content.style.display = 'none';
+                    icon.textContent = '▼'; // Seta para baixo (minimizado)
+                }
+            }
+        </script>
+    </div>
+    {% endblock %}
+</body>
+</html>

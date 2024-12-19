@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Adicionar Perguntas a um Tema</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form method="POST" onsubmit="return validateForm()">
+        <div>
+            <label for="theme-select">Tema:</label>
+            <select id="theme-select" name="theme-select" onchange="toggleThemeInput(this.value)">
+                <option value="">Selecione um tema existente</option>
+                {% for theme in existing_themes %}
+                    <option value="{{ theme }}">{{ theme }}</option>
+                {% endfor %}
+                <option value="new">Criar novo tema</option>
+            </select>
+            <input type="text" id="new-theme" name="new_theme" placeholder="Novo tema" disabled>
+        </div>
+        <div id="questions">
+            <!-- Initial question fields -->
+            <div class="question">
+                <label for="question_1">Pergunta:</label>
+                <input type="text" id="question_1" name="question_1" required><br>
+                <label for="resposta_correta_1">Resposta Correta:</label>
+                <input type="text" id="resposta_correta_1" name="resposta_correta_1" required><br>
+                <label for="resposta_errada1_1">Resposta Errada 1:</label>
+                <input type="text" id="resposta_errada1_1" name="resposta_errada1_1" required><br>
+                <label for="resposta_errada2_1">Resposta Errada 2:</label>
+                <input type="text" id="resposta_errada2_1" name="resposta_errada2_1" required><br>
+                <label for="resposta_errada3_1">Resposta Errada 3:</label>
+                <input type="text" id="resposta_errada3_1" name="resposta_errada3_1" required><br>
+                <label for="material_consulta_1">Material de Consulta:</label>
+                <input type="text" id="material_consulta_1" name="material_consulta_1"><br>
+            </div>
+        </div>
+        <button type="button" onclick="addQuestion()">+</button><br><br>
+        <button type="submit">Salvar</button>
+    </form>
+    <script>
+        let count = 2;
+        function addQuestion() {
+            const questionsDiv = document.getElementById('questions');
+            const newQuestion = document.createElement('div');
+            newQuestion.className = 'question';
+            newQuestion.innerHTML = `
+                <label for="question_${count}">Pergunta:</label>
+                <input type="text" id="question_${count}" name="question_${count}" required><br>
+                <label for="resposta_correta_${count}">Resposta Correta:</label>
+                <input type="text" id="resposta_correta_${count}" name="resposta_correta_${count}" required><br>
+                <label for="resposta_errada1_${count}">Resposta Errada 1:</label>
+                <input type="text" id="resposta_errada1_${count}" name="resposta_errada1_${count}" required><br>
+                <label for="resposta_errada2_${count}">Resposta Errada 2:</label>
+                <input type="text" id="resposta_errada2_${count}" name="resposta_errada2_${count}" required><br>
+                <label for="resposta_errada3_${count}">Resposta Errada 3:</label>
+                <input type="text" id="resposta_errada3_${count}" name="resposta_errada3_${count}" required><br>
+                <label for="material_consulta_${count}">Material de Consulta:</label>
+                <input type="text" id="material_consulta_${count}" name="material_consulta_${count}"><br>
+            `;
+            questionsDiv.appendChild(newQuestion);
+            count++;
+        }
+        
+        function toggleThemeInput(value) {
+            const newThemeInput = document.getElementById('new-theme');
+            if (value === 'new') {
+                newThemeInput.disabled = false;
+            } else {
+                newThemeInput.disabled = true;
+            }
+        }
+
+        function validateForm() {
+        const themeSelect = document.getElementById('theme-select').value;
+        if (themeSelect === 'new') {
+            const newTheme = document.getElementById('new-theme').value;
+            if (newTheme === '') {
+                alert('Por favor, insira um nome para o novo tema.');
+                return false;
+            }
+        } else if (themeSelect === '') {
+            alert('Por favor, selecione um tema existente ou escolha criar um novo.');
+            return false;
+        }
+        // Check if at least one question is added
+        let hasQuestion = false;
+        const questions = document.querySelectorAll('.question');
+        questions.forEach(question => {
+            const q = question.querySelector('input[name^="question"]').value;
+            if (q !== '') {
+                hasQuestion = true;
+            }
+        });
+        if (!hasQuestion) {
+            alert('Por favor, adicione pelo menos uma pergunta.');
+            return false;
+        }
+        return true;
+        }
+    </script>
+</div>
+{% endblock %}

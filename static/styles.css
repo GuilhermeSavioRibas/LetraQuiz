@@ -1,0 +1,351 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #FFFFFF;
+    color: #2A2A2A;
+}
+
+.container {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 1200px; /* Aumentado para acomodar tabelas maiores */
+    background-color: #F3F3F3;
+    overflow-x: auto; /* Adicionado para rolagem horizontal se necessário */
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #003134;
+}
+
+form {
+    text-align: center;
+    margin: 20px 0;
+}
+
+form label {
+    display: block;
+    margin: 10px 0;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007173;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #00E2B8;
+}
+
+/* Navbar container */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 10px 20px;
+    flex-wrap: wrap; /* Adicionado para ajustar em telas menores */
+}
+
+/* Brand/logo styling */
+.navbar-brand a {
+    text-decoration: none;
+    color: #007173;
+}
+
+.navbar-brand h1 {
+    margin: 0;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Navbar menu container */
+.navbar-menu {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Adicionado para ajustar em telas menores */
+}
+
+/* Navbar menu links */
+.navbar-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar-menu li {
+    margin-left: 20px;
+}
+
+.navbar-menu a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+/* Login form styling */
+.login-form {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Pushes it to the far right */
+    flex-wrap: wrap; /* Adicionado para ajustar em telas menores */
+}
+
+.login-form input {
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #007173;
+    width: 180px;
+    margin-right: 10px;
+}
+
+.login-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007173;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background-color: #00e2b8;
+}
+
+.login-message {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 50px;
+    color: #007173;
+}
+
+/* Quiz Styles */
+#question-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#top5-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+#top5-list li {
+    text-align: center;
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #E0E0E0;
+    border-radius: 5px;
+}
+
+.option-btn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #1B00EB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.option-btn:hover {
+    background-color: #C400E1;
+}
+
+/* Admin Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Garante que todas as colunas tenham largura igual */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #003134;
+    word-wrap: break-word; /* Quebra de linha para conteúdo longo */
+}
+
+th {
+    background-color: #007173;
+    color: #FFFFFF;
+}
+
+tr:hover {
+    background-color: #E0E0E0;
+}
+
+#theme-filter {
+    margin-bottom: 20px;
+}
+
+.table-container {
+    overflow-x: auto; /* Adicionado para rolagem horizontal */
+    margin-bottom: 40px; /* Espaçamento entre tabelas */
+}
+
+.scrollable-table {
+    max-height: 400px; /* Altura máxima para a tabela de perguntas */
+    overflow-y: auto; /* Habilita rolagem vertical */
+    border: 1px solid #003134; /* Adiciona borda ao contêiner */
+}
+
+input[readonly] {
+    background-color: #f0f0f0;
+    border: none;
+}
+
+select {
+    width: 90%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #007173;
+    background-color: #FFFFFF;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /*background-image: url('path_to_arrow_icon.png'); /* Custom dropdown arrow */
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: auto 50%;
+}
+
+.hidden {
+    display: none;
+}
+
+.select-styled {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #007173;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.select-styled span {
+    font-size: 16px;
+}
+
+.arrow {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #007173;
+    margin-right: 10px;
+}
+
+.select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #f3f3f3;
+    border: 1px solid #007173;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    z-index: 1000;
+}
+
+.select-options span {
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    color: #2a2a2a;
+    cursor: pointer;
+}
+
+.select-options span:hover {
+    background-color: #00e2b8;
+    color: #fff;
+}
+
+#usuario {
+    width: 90%;
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #007173;
+    background-color: #FFFFFF;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+    .navbar-menu {
+        flex-direction: column;
+    }
+
+    .navbar-menu ul {
+        flex-direction: column;
+    }
+
+    .navbar-menu li {
+        margin: 10px 0;
+    }
+
+    .login-form {
+        margin-left: 0;
+        flex-direction: column; /* Alinha os campos do formulário verticalmente */
+    }
+
+    .login-form input {
+        width: 100%; /* Ocupa toda a largura */
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    .collapsible-header h1 {
+        font-size: 18px; /* Reduz o tamanho do título em telas menores */
+    }
+
+    /* Adiciona rolagem horizontal na tabela de perguntas em telas menores */
+    .scrollable-table {
+        overflow-x: auto; /* Força a barra de rolagem horizontal */
+    }
+
+    .table-questions {
+        display: block;
+        white-space: nowrap;
+    }
+
+    .table-questions th, .table-questions td {
+        min-width: 120px; /* Define uma largura mínima para as colunas */
+    }
+}

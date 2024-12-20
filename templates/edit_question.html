@@ -2,25 +2,30 @@
 
 {% block content %}
 <div class="container">
-    <h1>Editar Pergunta</h1>
-    <form method="POST">
+    <h1 id="form-title">Editar Pergunta</h1>
+    <form method="POST" aria-labelledby="form-title">
         <label for="tema">Tema:</label>
-        <input type="text" id="tema" name="tema" value="{{ question.tema }}" readonly>
+        <input type="text" id="tema" name="tema" value="{{ question.tema }}" readonly aria-describedby="tema-description">
+        <p id="tema-description" class="sr-only">O tema da pergunta não pode ser alterado.</p>
         <input type="hidden" name="tema" value="{{ question.tema }}">
         <label for="pergunta">Pergunta:</label>
-        <input type="text" id="pergunta" name="pergunta" value="{{ question.pergunta }}" required><br>
+        <input type="text" id="pergunta" name="pergunta" value="{{ question.pergunta }}" required aria-describedby="pergunta-description">
+        <p id="pergunta-description" class="sr-only">Digite a pergunta.</p>
         <label for="resposta_correta">Resposta Correta:</label>
-        <input type="text" id="resposta_correta" name="resposta_correta" value="{{ question.resposta_correta }}" required><br>
+        <input type="text" id="resposta_correta" name="resposta_correta" value="{{ question.resposta_correta }}" required aria-describedby="resposta-correta-description">
+        <p id="resposta-correta-description" class="sr-only">Digite a resposta correta.</p>
         <label for="resposta_errada1">Resposta Errada 1:</label>
-        <input type="text" id="resposta_errada1" name="resposta_errada1" value="{{ question.resposta_errada_1 }}" required><br>
+        <input type="text" id="resposta_errada1" name="resposta_errada1" value="{{ question.resposta_errada_1 }}" required aria-describedby="resposta-errada-description">
+        <p id="resposta-errada-description" class="sr-only">Digite a primeira resposta errada.</p>
         <label for="resposta_errada2">Resposta Errada 2:</label>
-        <input type="text" id="resposta_errada2" name="resposta_errada2" value="{{ question.resposta_errada_2 }}" required><br>
+        <input type="text" id="resposta_errada2" name="resposta_errada2" value="{{ question.resposta_errada_2 }}" required aria-describedby="resposta-errada-description">
         <label for="resposta_errada3">Resposta Errada 3:</label>
-        <input type="text" id="resposta_errada3" name="resposta_errada3" value="{{ question.resposta_errada_3 }}" required><br>
+        <input type="text" id="resposta_errada3" name="resposta_errada3" value="{{ question.resposta_errada_3 }}" required aria-describedby="resposta-errada-description">
         <label for="material_consulta">Material de Consulta:</label>
-        <input type="text" id="material_consulta" name="material_consulta" value="{{ question.material_consulta }}"><br>
-        <button type="submit">Salvar Alterações</button>
-        <button type="button" data-question-id="{{ question.id|tojson }}" onclick="deleteQuestion(this)">Excluir Pergunta</button>
+        <input type="text" id="material_consulta" name="material_consulta" value="{{ question.material_consulta }}" aria-describedby="material-consulta-description">
+        <p id="material-consulta-description" class="sr-only">Digite o material de consulta, se disponível.</p>
+        <button type="submit" aria-label="Salvar alterações">Salvar Alterações</button>
+        <button type="button" data-question-id="{{ question.id|tojson }}" onclick="deleteQuestion(this)" aria-label="Excluir pergunta">Excluir Pergunta</button>
     </form>
     <script>
         function deleteQuestion(buttonElement) {

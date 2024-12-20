@@ -2,41 +2,53 @@
 
 {% block content %}
 <div class="container">
-    <h1>Adicionar Perguntas a um Tema</h1>
+    <h1 id="form-title">Adicionar Perguntas a um Tema</h1>
     {% if error %}
-        <p style="color: red;">{{ error }}</p>
+        <p style="color: red;" role="alert">{{ error }}</p>
     {% endif %}
-    <form method="POST" onsubmit="return validateForm()">
+    <form method="POST" onsubmit="return validateForm()" aria-labelledby="form-title">
         <div>
             <label for="theme-select">Tema:</label>
-            <select id="theme-select" name="theme-select" onchange="toggleThemeInput(this.value)">
+            <select id="theme-select" name="theme-select" onchange="toggleThemeInput(this.value)" aria-describedby="theme-description">
                 <option value="">Selecione um tema existente</option>
                 {% for theme in existing_themes %}
                     <option value="{{ theme }}">{{ theme }}</option>
                 {% endfor %}
                 <option value="new">Criar novo tema</option>
             </select>
-            <input type="text" id="new-theme" name="new_theme" placeholder="Novo tema" disabled>
+            <input type="text" id="new-theme" name="new_theme" placeholder="Novo tema" disabled aria-describedby="new-theme-description">
+            <p id="theme-description" class="sr-only">Selecione um tema existente ou crie um novo tema.</p>
+            <p id="new-theme-description" class="sr-only">Se você escolheu criar um novo tema, insira o nome do novo tema aqui.</p>
         </div>
-        <div id="questions">
+        <div id="questions" role="group" aria-label="Campos de perguntas">
             <!-- Initial question fields -->
             <div class="question">
                 <label for="question_1">Pergunta:</label>
-                <input type="text" id="question_1" name="question_1" required><br>
+                <input type="text" id="question_1" name="question_1" required aria-describedby="question-description">
+                <p id="question-description" class="sr-only">Insira a pergunta.</p>
+                <br>
                 <label for="resposta_correta_1">Resposta Correta:</label>
-                <input type="text" id="resposta_correta_1" name="resposta_correta_1" required><br>
+                <input type="text" id="resposta_correta_1" name="resposta_correta_1" required aria-describedby="correct-answer-description">
+                <p id="correct-answer-description" class="sr-only">Insira a resposta correta.</p>
+                <br>
                 <label for="resposta_errada1_1">Resposta Errada 1:</label>
-                <input type="text" id="resposta_errada1_1" name="resposta_errada1_1" required><br>
+                <input type="text" id="resposta_errada1_1" name="resposta_errada1_1" required aria-describedby="wrong-answer-description">
+                <p id="wrong-answer-description" class="sr-only">Insira a primeira resposta errada.</p>
+                <br>
                 <label for="resposta_errada2_1">Resposta Errada 2:</label>
-                <input type="text" id="resposta_errada2_1" name="resposta_errada2_1" required><br>
+                <input type="text" id="resposta_errada2_1" name="resposta_errada2_1" required aria-describedby="wrong-answer-description">
+                <br>
                 <label for="resposta_errada3_1">Resposta Errada 3:</label>
-                <input type="text" id="resposta_errada3_1" name="resposta_errada3_1" required><br>
+                <input type="text" id="resposta_errada3_1" name="resposta_errada3_1" required aria-describedby="wrong-answer-description">
+                <br>
                 <label for="material_consulta_1">Material de Consulta:</label>
-                <input type="text" id="material_consulta_1" name="material_consulta_1"><br>
+                <input type="text" id="material_consulta_1" name="material_consulta_1" aria-describedby="material-description">
+                <p id="material-description" class="sr-only">Insira o material de consulta, se disponível.</p>
+                <br>
             </div>
         </div>
-        <button type="button" onclick="addQuestion()">+</button><br><br>
-        <button type="submit">Salvar</button>
+        <button type="button" onclick="addQuestion()" aria-label="Adicionar nova pergunta">+</button><br><br>
+        <button type="submit" aria-label="Salvar perguntas">Salvar</button>
     </form>
     <script>
         let count = 2;
@@ -46,17 +58,17 @@
             newQuestion.className = 'question';
             newQuestion.innerHTML = `
                 <label for="question_${count}">Pergunta:</label>
-                <input type="text" id="question_${count}" name="question_${count}" required><br>
+                <input type="text" id="question_${count}" name="question_${count}" required aria-describedby="question-description"><br>
                 <label for="resposta_correta_${count}">Resposta Correta:</label>
-                <input type="text" id="resposta_correta_${count}" name="resposta_correta_${count}" required><br>
+                <input type="text" id="resposta_correta_${count}" name="resposta_correta_${count}" required aria-describedby="correct-answer-description"><br>
                 <label for="resposta_errada1_${count}">Resposta Errada 1:</label>
-                <input type="text" id="resposta_errada1_${count}" name="resposta_errada1_${count}" required><br>
+                <input type="text" id="resposta_errada1_${count}" name="resposta_errada1_${count}" required aria-describedby="wrong-answer-description"><br>
                 <label for="resposta_errada2_${count}">Resposta Errada 2:</label>
-                <input type="text" id="resposta_errada2_${count}" name="resposta_errada2_${count}" required><br>
+                <input type="text" id="resposta_errada2_${count}" name="resposta_errada2_${count}" required aria-describedby="wrong-answer-description"><br>
                 <label for="resposta_errada3_${count}">Resposta Errada 3:</label>
-                <input type="text" id="resposta_errada3_${count}" name="resposta_errada3_${count}" required><br>
+                <input type="text" id="resposta_errada3_${count}" name="resposta_errada3_${count}" required aria-describedby="wrong-answer-description"><br>
                 <label for="material_consulta_${count}">Material de Consulta:</label>
-                <input type="text" id="material_consulta_${count}" name="material_consulta_${count}"><br>
+                <input type="text" id="material_consulta_${count}" name="material_consulta_${count}" aria-describedby="material-description"><br>
             `;
             questionsDiv.appendChild(newQuestion);
             count++;
@@ -72,31 +84,31 @@
         }
 
         function validateForm() {
-        const themeSelect = document.getElementById('theme-select').value;
-        if (themeSelect === 'new') {
-            const newTheme = document.getElementById('new-theme').value;
-            if (newTheme === '') {
-                alert('Por favor, insira um nome para o novo tema.');
+            const themeSelect = document.getElementById('theme-select').value;
+            if (themeSelect === 'new') {
+                const newTheme = document.getElementById('new-theme').value;
+                if (newTheme === '') {
+                    alert('Por favor, insira um nome para o novo tema.');
+                    return false;
+                }
+            } else if (themeSelect === '') {
+                alert('Por favor, selecione um tema existente ou escolha criar um novo.');
                 return false;
             }
-        } else if (themeSelect === '') {
-            alert('Por favor, selecione um tema existente ou escolha criar um novo.');
-            return false;
-        }
-        // Check if at least one question is added
-        let hasQuestion = false;
-        const questions = document.querySelectorAll('.question');
-        questions.forEach(question => {
-            const q = question.querySelector('input[name^="question"]').value;
-            if (q !== '') {
-                hasQuestion = true;
+            // Check if at least one question is added
+            let hasQuestion = false;
+            const questions = document.querySelectorAll('.question');
+            questions.forEach(question => {
+                const q = question.querySelector('input[name^="question"]').value;
+                if (q !== '') {
+                    hasQuestion = true;
+                }
+            });
+            if (!hasQuestion) {
+                alert('Por favor, adicione pelo menos uma pergunta.');
+                return false;
             }
-        });
-        if (!hasQuestion) {
-            alert('Por favor, adicione pelo menos uma pergunta.');
-            return false;
-        }
-        return true;
+            return true;
         }
     </script>
 </div>

@@ -1,23 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Editar Usuário</h1>
-<form method="POST">
+<h1 id="form-title">Editar Usuário</h1>
+<form method="POST" aria-labelledby="form-title">
     <div class="form-group">
-        <label for="login">Login</label>
-        <input type="text" class="form-control" id="login" name="login" value="{{ user.login }}" required>
+        <label for="login">Login:</label>
+        <input type="text" class="form-control" id="login" name="login" value="{{ user.login }}" required aria-describedby="login-description">
+        <p id="login-description" class="sr-only">Digite o nome de usuário.</p>
     </div>
     <div class="form-group">
-        <label for="senha">Senha</label>
-        <input type="password" class="form-control" id="senha" name="senha" required>
+        <label for="senha">Senha:</label>
+        <input type="password" class="form-control" id="senha" name="senha" required aria-describedby="senha-description">
+        <p id="senha-description" class="sr-only">Digite a senha do usuário.</p>
     </div>
     <div class="form-group">
-        <label for="tipo_usuario">Tipo de Usuário</label>
-        <select class="form-control" id="tipo_usuario" name="tipo_usuario" required>
+        <label for="tipo_usuario">Tipo de Usuário:</label>
+        <select class="form-control" id="tipo_usuario" name="tipo_usuario" required aria-describedby="tipo-usuario-description">
             <option value="admin" {% if user.tipo_usuario == 'admin' %}selected{% endif %}>Admin</option>
             <option value="user" {% if user.tipo_usuario == 'user' %}selected{% endif %}>Usuário</option>
         </select>
+        <p id="tipo-usuario-description" class="sr-only">Selecione o tipo de usuário (Admin ou Usuário).</p>
     </div>
-    <button type="submit" class="btn btn-primary">Salvar</button>
+    <button type="submit" class="btn btn-primary" aria-label="Salvar alterações">Salvar</button>
 </form>
 {% endblock %}

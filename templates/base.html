@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,35 +8,45 @@
 </head>
 <body>
     <header>
-        <nav class="navbar">
+        <nav class="navbar" aria-label="Menu principal">
             <div class="navbar-brand">
-                <h1><a href="{{ url_for('index') }}">LetraQuiz</a></h1>
+                <h1><a href="{{ url_for('index') }}" aria-label="Página inicial">LetraQuiz</a></h1>
             </div>
             <div class="navbar-menu">
-                <ul>
+                <ul role="menubar" aria-label="Menu de navegação">
                     {% if session['user_type'] == 'admin' %}
-                        <li><a href="{{ url_for('admin_questions') }}">Controle</a></li>
+                        <li role="none">
+                            <a href="{{ url_for('admin_questions') }}" role="menuitem" aria-label="Controle de perguntas">Controle</a>
+                        </li>
                     {% endif %}         
                 </ul>
                 {% if session.get('user_id') %}
-                    <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+                    <a href="{{ url_for('logout') }}" class="logout-link" aria-label="Sair da conta">Logout</a>
                 {% else %}           
                     {% if error %}
-                        <div class="error-message" style="color: red; text-align: center;">
+                        <div class="error-message" role="alert" style="color: red; text-align: center;">
                             {{ error }}
                         </div>
                     {% endif %}
-                    <form method="POST" action="{{ url_for('login') }}" class="login-form">
-                        <input type="text" id="login" name="login" placeholder="Login" required>
-                        <input type="password" id="senha" name="senha" placeholder="Senha" required>
-                        <button type="submit">Login</button>
+                    <form method="POST" action="{{ url_for('login') }}" class="login-form" aria-label="Formulário de login">
+                        <div>
+                            <label for="login" class="sr-only">Login:</label>
+                            <input type="text" id="login" name="login" placeholder="Login" required aria-describedby="login-description">
+                            <p id="login-description" class="sr-only">Digite seu nome de usuário.</p>
+                        </div>
+                        <div>
+                            <label for="senha" class="sr-only">Senha:</label>
+                            <input type="password" id="senha" name="senha" placeholder="Senha" required aria-describedby="senha-description">
+                            <p id="senha-description" class="sr-only">Digite sua senha.</p>
+                        </div>
+                        <button type="submit" aria-label="Entrar">Login</button>
                     </form>
                 {% endif %}
             </div>
         </nav>
     </header>
-    <div class="container">
+    <main class="container">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 </body>
 </html>

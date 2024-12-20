@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,22 +13,24 @@
     <div class="container">
         <!-- Gerenciar Perguntas -->
         <div class="collapsible-container">
-            <div class="collapsible-header" onclick="toggleCollapse(this)">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" role="button" tabindex="0" aria-expanded="false" aria-controls="questions-content">
                 <span class="toggle-icon">▼</span> <!-- Ícone inicial para baixo -->
                 <h1>Gerenciar Perguntas</h1>
             </div>
-            <div class="collapsible-content" style="display: none;">
-                <button onclick="location.href='/admin/add_theme_questions'" class="btn btn-primary">Adicionar Novo Tema e Perguntas</button>
-                <select id="theme-filter">
+            <div id="questions-content" class="collapsible-content" style="display: none;">
+                <button onclick="location.href='/admin/add_theme_questions'" class="btn btn-primary" aria-label="Adicionar novo tema e perguntas">Adicionar Novo Tema e Perguntas</button>
+                <label for="theme-filter">Filtrar por tema:</label>
+                <select id="theme-filter" aria-describedby="theme-filter-description">
                     <option value="">Todos os Temas</option>
                     {% for theme in themes %}
                         <option value="{{ theme }}">{{ theme }}</option>
                     {% endfor %}
                 </select>
+                <p id="theme-filter-description" class="sr-only">Selecione um tema para filtrar as perguntas.</p>
                 <p>Clique em uma pergunta para edita-la ou use os botões de ação.</p>
                 <div class="table-container">
                     <div class="scrollable-table">
-                        <table id="questions-table" class="table table-questions">
+                        <table id="questions-table" class="table table-questions" aria-describedby="questions-table-description">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -55,8 +57,8 @@
                                     <td>{{ question.material_consulta }}</td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-warning edit-btn">Editar</a>
-                                            <a href="{{ url_for('delete_question', question_id=question.id) }}" class="btn btn-danger delete-btn" onclick="return confirm('Tem certeza que deseja excluir esta pergunta?')">Excluir</a>
+                                            <a href="{{ url_for('edit_question', question_id=question.id) }}" class="btn btn-warning edit-btn" aria-label="Editar pergunta">Editar</a>
+                                            <a href="{{ url_for('delete_question', question_id=question.id) }}" class="btn btn-danger delete-btn" onclick="return confirm('Tem certeza que deseja excluir esta pergunta?')" aria-label="Excluir pergunta">Excluir</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -70,15 +72,15 @@
 
         <!-- Gerenciar Usuários -->
         <div class="collapsible-container">
-            <div class="collapsible-header" onclick="toggleCollapse(this)">
+            <div class="collapsible-header" onclick="toggleCollapse(this)" role="button" tabindex="0" aria-expanded="false" aria-controls="users-content">
                 <span class="toggle-icon">▼</span> <!-- Ícone inicial para baixo -->
                 <h1>Gerenciar Usuários</h1>
             </div>
-            <div class="collapsible-content" style="display: none;">
-                <button onclick="location.href='/admin/add_user'" class="btn btn-primary">Adicionar Novo Usuário</button>
+            <div id="users-content" class="collapsible-content" style="display: none;">
+                <button onclick="location.href='/admin/add_user'" class="btn btn-primary" aria-label="Adicionar novo usuário">Adicionar Novo Usuário</button>
                 <div class="table-container">
                     <div class="scrollable-table">
-                        <table id="users-table" class="table">
+                        <table id="users-table" class="table" aria-describedby="users-table-description">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -95,8 +97,8 @@
                                     <td>{{ user.tipo_usuario }}</td>
                                     <td>
                                         <div class="action-buttons">
-                                            <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-warning edit-btn">Editar</a>
-                                            <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger delete-btn" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
+                                            <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-warning edit-btn" aria-label="Editar usuário">Editar</a>
+                                            <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger delete-btn" onclick="return confirm('Tem certeza que deseja excluir este usuário?')" aria-label="Excluir usuário">Excluir</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -132,15 +134,17 @@
                 const content = header.nextElementSibling;
                 const icon = header.querySelector('.toggle-icon');
 
-                // Verifica se o conte��do está visível ou oculto
+                // Verifica se o conteúdo está visível ou oculto
                 if (content.style.display === 'none' || content.style.display === '') {
                     // Expande o conteúdo
                     content.style.display = 'block';
                     icon.textContent = '▲'; // Seta para cima (expandido)
+                    header.setAttribute('aria-expanded', 'true');
                 } else {
                     // Minimiza o conteúdo
                     content.style.display = 'none';
                     icon.textContent = '▼'; // Seta para baixo (minimizado)
+                    header.setAttribute('aria-expanded', 'false');
                 }
             }
         </script>

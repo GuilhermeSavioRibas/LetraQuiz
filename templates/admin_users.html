@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Gerenciar Usuários</h1>
-<a href="{{ url_for('add_user') }}" class="btn btn-primary">Adicionar Usuário</a>
-<table class="table">
+<h1 id="page-title">Gerenciar Usuários</h1>
+<a href="{{ url_for('add_user') }}" class="btn btn-primary" aria-label="Adicionar novo usuário">Adicionar Usuário</a>
+<table class="table" aria-describedby="page-title">
     <thead>
         <tr>
             <th>ID</th>
@@ -19,8 +19,8 @@
             <td>{{ user.login }}</td>
             <td>{{ user.tipo_usuario }}</td>
             <td>
-                <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-warning">Editar</a>
-                <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir este usuário?')">Excluir</a>
+                <a href="{{ url_for('edit_user', user_id=user.id) }}" class="btn btn-warning" aria-label="Editar usuário">Editar</a>
+                <a href="{{ url_for('delete_user', user_id=user.id) }}" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir este usuário?')" aria-label="Excluir usuário">Excluir</a>
             </td>
         </tr>
         {% endfor %}

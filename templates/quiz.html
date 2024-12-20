@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,18 +11,34 @@
 <body>
     {% extends "base.html" %}
 
-{% block content %}
+    {% block content %}
     <div class="container">
-        <h1>Quiz - {{ tema }}</h1>
-        <h2>Jogador: {{ usuario }}</h2>
-        <h3>Pontos: <span id="score">0</span></h3>
-        <h3>Questão: <span id="question-number">0/0</span></h3>
-        <div id="question-container"></div>
-        <button id="skip-button" onclick="useSkip()">Pular Questão (<span id="pulos">3</span> restantes)</button>
-        <button id="l2-button" onclick="useL2()">Consultar Professor(a) (<span id="consultas_professor">1</span> restantes)</button>
-        <button id="card-button" onclick="useCard()">Cartas (<span id="cartas">1</span> restantes)</button>
-        <button id="article-button" onclick="useArticle()">Material de consulta (<span id="material_de_consulta">1</span> restantes)</button>
-        <button id="back-button" onclick="confirmExit()">Sair</button>
+        <header>
+            <h1>Quiz - {{ tema }}</h1>
+            <h2>Jogador: {{ usuario }}</h2>
+        </header>
+        <main>
+            <section aria-live="polite">
+                <h3>Pontos: <span id="score">0</span></h3>
+                <h3>Questão: <span id="question-number">0/0</span></h3>
+                <div id="question-container" role="region" aria-labelledby="question-title"></div>
+            </section>
+            <section>
+                <button id="skip-button" onclick="useSkip()" aria-label="Pular questão, restam">
+                    Pular Questão (<span id="pulos">3</span> restantes)
+                </button>
+                <button id="l2-button" onclick="useL2()" aria-label="Consultar Professor(a), restam">
+                    Consultar Professor(a) (<span id="consultas_professor">1</span> restantes)
+                </button>
+                <button id="card-button" onclick="useCard()" aria-label="Usar cartas, restam">
+                    Cartas (<span id="cartas">1</span> restantes)
+                </button>
+                <button id="article-button" onclick="useArticle()" aria-label="Material de consulta, restam">
+                    Material de consulta (<span id="material_de_consulta">1</span> restantes)
+                </button>
+                <button id="back-button" onclick="confirmExit()" aria-label="Sair do quiz">Sair</button>
+            </section>
+        </main>
     </div>
 
     <script>
@@ -33,7 +49,7 @@
         let material_de_consulta = 1;
         let totalPerguntas = 0;
         let perguntaNumero = 0;
-        
+
         function disableAllButtons() {
             document.querySelectorAll('button').forEach(button => {
                 button.disabled = true;
@@ -73,11 +89,13 @@
 
                 const questionContainer = document.getElementById('question-container');
                 questionContainer.innerHTML = `
-                    <h2>${data.pergunta}</h2>
-                    ${data.opcoes.map(opcao => `<button class="option-btn" onclick="checkAnswer('${opcao}')">${opcao}</button>`).join('')}
+                    <h2 id="question-title">${data.pergunta}</h2>
+                    <div role="group" aria-labelledby="question-title">
+                        ${data.opcoes.map(opcao => `<button class="option-btn" onclick="checkAnswer('${opcao}')" aria-label="Alternativa: ${opcao}">${opcao}</button>`).join('')}
+                    </div>
                 `;
 
-                document.getElementById('question-number').innerText = `${data.pergunta_numero}/${data.total_perguntas}`; 
+                document.getElementById('question-number').innerText = `${data.pergunta_numero}/${data.total_perguntas}`;
 
                 if (data.artigo === null) {
                     document.getElementById('article-button').disabled = false;
@@ -123,7 +141,6 @@
                 }
             });
         }
-
 
         function useSkip() {
             fetch('/use_skip', {
@@ -202,11 +219,13 @@
                         });
                         let optionsHtml = "";
                         data.opcoes.forEach((option, index) => {
-                            optionsHtml += `<button class="option-btn" onclick="checkAnswer('${option}')">${option}</button>`;
+                            optionsHtml += `<button class="option-btn" onclick="checkAnswer('${option}')" aria-label="Alternativa: ${option}">${option}</button>`;
                         });
                         $("#question-container").html(`
-                            <h2>${data.pergunta}</h2>
-                            ${optionsHtml}
+                            <h2 id="question-title">${data.pergunta}</h2>
+                            <div role="group" aria-labelledby="question-title">
+                                ${optionsHtml}
+                            </div>
                         `);
                         if (cartas === 0) {
                             document.getElementById('card-button').disabled = true;

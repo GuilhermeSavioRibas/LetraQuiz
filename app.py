@@ -5,7 +5,6 @@ import random
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from urllib.parse import urlparse, urljoin
-from functools import wraps
 
 
 app = Flask(__name__)
@@ -31,12 +30,18 @@ def root():
 
 @app.route('/index')
 def index():
+    """Render the index page with available quiz themes."""
     error = session.pop('error', None)
     conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT DISTINCT tema FROM perguntas")
-    temas = [row['tema'] for row in cursor.fetchall()]
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT tema FROM perguntas")
+        temas = [row['tema'] for row in cursor.fetchall()]
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        temas = []
+    finally:
+        conn.close()
     return render_template('index.html', temas=temas, top5=[], error=error)
 
 @app.route('/start_quiz', methods=['POST'])
@@ -249,11 +254,9 @@ def login():
             else:
                 return redirect(url_for('index'))
         else:
-            # If login fails, redirect to index with an error message
             session['error'] = 'Credenciais inválidas'
             return redirect(url_for('index'))
     else:
-        # If it's a GET request, redirect to index
         return redirect(url_for('index'))
 
 @app.route('/logout')
@@ -309,7 +312,7 @@ def add_theme_questions():
         else:
             theme = theme_select
         questions = []
-        for i in range(1, 100):  # Arbitrary high number
+        for i in range(1, 100):
             question = request.form.get(f'question_{i}')
             if not question:
                 break
@@ -328,7 +331,6 @@ def add_theme_questions():
             })
         if not questions:
             return render_template('add_theme_questions.html', existing_themes=existing_themes, error='Por favor, adicione pelo menos uma pergunta.')
-        # Save to database
         save_theme_and_questions(theme, questions)
         return redirect(url_for('admin_questions'))
     return render_template('add_theme_questions.html', existing_themes=existing_themes)
@@ -336,7 +338,6 @@ def add_theme_questions():
 def save_theme_and_questions(theme, questions):
     conn = get_db_connection()
     cursor = conn.cursor()
-    # Insert each question with the theme
     for q in questions:
         cursor.execute("""
             INSERT INTO perguntas (tema, pergunta, resposta_correta, resposta_errada_1, resposta_errada_2, resposta_errada_3, material_consulta)
@@ -470,4 +471,4 @@ if __name__ == '__main__':
 
 
     # implementar tela de cadastro de usuários
-    # alterar tela de login para compatibilidade com mobile.
+    # implementar recursos de acessibilidade
